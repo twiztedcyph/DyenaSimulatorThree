@@ -5,12 +5,16 @@
  */
 package Classes;
 
+import Classes.Parser.Line;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
+import java.util.Date;
 
 @Generated("org.jsonschema2pojo")
 public class Message
@@ -43,12 +47,12 @@ public class Message
     }
 
     /**
-     * @param inf
-     * @param sys
-     * @param vmms
-     * @param eng
-     * @param head
-     * @param bt
+     * @param bt Block type number.
+     * @param head Message header object.
+     * @param vmms Vessel motion monitor system object.
+     * @param inf Intelligent Fender object. (inf used as if is reserved.)
+     * @param eng Engine object.
+     * @param sys System voltage and temperature object.
      */
     public Message(Integer bt, Head head, Vmms vmms, Inf inf, Eng eng, Sys sys)
     {
@@ -60,8 +64,53 @@ public class Message
         this.sys = sys;
     }
 
+    public Message(Line line, int vid, ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.sss");
+	Date date = new Date();
+	
+        
+        this.bt = 257;
+        this.head = new Head(vid, dateFormat.format(date), line.getLatitude(), line.getLongitude(), 0, 0.0f, 257);
+        /*
+         ArrayList<Double> hve,
+         ArrayList<Double> pit,
+         ArrayList<Double> rol,
+         ArrayList<Double> hed,
+         Double hrms,
+         Double prms,
+         Double rrms,
+         ArrayList<Double> ax,
+         ArrayList<Double> ay,
+         ArrayList<Double> az
+         */
+        //Need to get the arrays set up....
+        this.vmms = new Vmms(hve, pit, rol, hed, ax, ay, az);
+        /*
+         Float pax, Float pay, Float paz, 
+         Float pbx, Float pby, Float pbz, 
+         Float pcx, Float pcy, Float pcz, 
+         Float pdx, Float pdy, Float pdz
+         */
+        this.inf = new Inf(0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 0.0f);
+        /*
+         Double fca, Double fcb, 
+         Integer rpma, Integer rpmb, 
+         Integer tha, Integer thb
+         */
+        this.eng = new Eng(0.0, 0.0, 0, 0, 0, 0);
+        /*
+         Double volt, Double temp
+         */
+        this.sys = new Sys(0.0, 0.0);
+    }
+
     /**
-     * @return The bt
+     * Get the block type for this message.
+     *
+     * @return The bt (block type) for this message.
      */
     public Integer getBt()
     {
@@ -69,7 +118,9 @@ public class Message
     }
 
     /**
-     * @param bt The bt
+     * Set the block type for this message.
+     *
+     * @param bt The bt (block type) for this message.
      */
     public void setBt(Integer bt)
     {
@@ -77,7 +128,9 @@ public class Message
     }
 
     /**
-     * @return The head
+     * Get the header for this message.
+     *
+     * @return The head (header) for this message.
      */
     public Head getHead()
     {
@@ -85,7 +138,9 @@ public class Message
     }
 
     /**
-     * @param head The head
+     * Set the header for this message.
+     *
+     * @param head The head (header) for this message.
      */
     public void setHead(Head head)
     {
@@ -93,7 +148,9 @@ public class Message
     }
 
     /**
-     * @return The vmms
+     * Get the vessel motion monitoring system object for this message.
+     *
+     * @return The vmms (vessel motion monitoring system) for this message.
      */
     public Vmms getVmms()
     {
@@ -101,7 +158,9 @@ public class Message
     }
 
     /**
-     * @param vmms The vmms
+     * Set the vessel motion monitoring system object for this message.
+     *
+     * @param vmms The vmms (vessel motion monitoring system) for this message.
      */
     public void setVmms(Vmms vmms)
     {
@@ -109,7 +168,9 @@ public class Message
     }
 
     /**
-     * @return The inf
+     * Get the intelligent fender object for this message.
+     *
+     * @return The inf (intelligent fender) object for this message.
      */
     public Inf getInf()
     {
@@ -117,7 +178,9 @@ public class Message
     }
 
     /**
-     * @param inf The if
+     * Set the intelligent fender object for this message.
+     *
+     * @param inf The if (intelligent fender) object for this message.
      */
     public void setInf(Inf inf)
     {
@@ -125,7 +188,9 @@ public class Message
     }
 
     /**
-     * @return The eng
+     * Get the engine object for this message.
+     *
+     * @return The eng (engine) object for this message.
      */
     public Eng getEng()
     {
@@ -133,7 +198,9 @@ public class Message
     }
 
     /**
-     * @param eng The eng
+     * Set the engine object for this message.
+     *
+     * @param eng The eng (engine) object for this message.
      */
     public void setEng(Eng eng)
     {
@@ -141,7 +208,9 @@ public class Message
     }
 
     /**
-     * @return The sys
+     * Get the system object for this message.
+     *
+     * @return The sys (system) object for this message.
      */
     public Sys getSys()
     {
@@ -149,14 +218,20 @@ public class Message
     }
 
     /**
-     * @param sys The sys
+     * Set the system object for this message.
+     *
+     * @param sys The sys (system) object for this message.
      */
     public void setSys(Sys sys)
     {
         this.sys = sys;
     }
 
-
+    /**
+     * Engine class.
+     *
+     * Contains engine details.
+     */
     @Generated("org.jsonschema2pojo")
     public class Eng
     {
@@ -181,19 +256,19 @@ public class Message
         private Integer thb;
 
         /**
-         * No args constructor for use in serialization
+         * No args constructor for use in serialisation
          */
         public Eng()
         {
         }
 
         /**
-         * @param thb
-         * @param tha
-         * @param rpmb
-         * @param rpma
-         * @param fcb
-         * @param fca
+         * @param fca Fuel consumption for engine A.
+         * @param fcb Fuel consumption for engine B.
+         * @param rpma RPM for engine A.
+         * @param rpmb RPM for engine B.
+         * @param tha Throttle percentage for engine A.
+         * @param thb Throttle percentage for engine B.
          */
         public Eng(Double fca, Double fcb, Integer rpma, Integer rpmb, Integer tha, Integer thb)
         {
@@ -206,7 +281,9 @@ public class Message
         }
 
         /**
-         * @return The fca
+         * Get the fuel consumption for engine A.
+         *
+         * @return The fca (fuel consumption) for engine A.
          */
         public Double getFca()
         {
@@ -214,7 +291,9 @@ public class Message
         }
 
         /**
-         * @param fca The fca
+         * Set the fuel consumption for engine B.
+         *
+         * @param fca The fca (fuel consumption) for engine A.
          */
         public void setFca(Double fca)
         {
@@ -222,7 +301,9 @@ public class Message
         }
 
         /**
-         * @return The fcb
+         * Get the fuel consumption for engine A.
+         *
+         * @return The fcb (fuel consumption) for engine B.
          */
         public Double getFcb()
         {
@@ -230,7 +311,9 @@ public class Message
         }
 
         /**
-         * @param fcb The fcb
+         * Set the fuel consumption for engine A.
+         *
+         * @param fcb The fcb (fuel consumption) for engine B.
          */
         public void setFcb(Double fcb)
         {
@@ -238,7 +321,9 @@ public class Message
         }
 
         /**
-         * @return The rpma
+         * Get the RPM for engine A.
+         *
+         * @return The rpma (RPM) for engine A.
          */
         public Integer getRpma()
         {
@@ -246,7 +331,9 @@ public class Message
         }
 
         /**
-         * @param rpma The rpma
+         * Set the RPM for engine A.
+         *
+         * @param rpma The rpma (RPM) for engine A.
          */
         public void setRpma(Integer rpma)
         {
@@ -254,7 +341,9 @@ public class Message
         }
 
         /**
-         * @return The rpmb
+         * Get the RPM for engine B.
+         *
+         * @return The rpmb (RPM) for engine B.
          */
         public Integer getRpmb()
         {
@@ -262,7 +351,9 @@ public class Message
         }
 
         /**
-         * @param rpmb The rpmb
+         * Set the RPM for engine B.
+         *
+         * @param rpmb The rpmb (RPM) for engine B.
          */
         public void setRpmb(Integer rpmb)
         {
@@ -270,7 +361,9 @@ public class Message
         }
 
         /**
-         * @return The tha
+         * Get the throttle percentage for engine A.
+         *
+         * @return The tha (throttle percentage) for engine A.
          */
         public Integer getTha()
         {
@@ -278,7 +371,9 @@ public class Message
         }
 
         /**
-         * @param tha The tha
+         * Set the throttle percentage for engine A.
+         *
+         * @param tha The tha (throttle percentage) for engine A.
          */
         public void setTha(Integer tha)
         {
@@ -286,7 +381,9 @@ public class Message
         }
 
         /**
-         * @return The thb
+         * Get the throttle percentage for engine B.
+         *
+         * @return The thb (throttle percentage) for engine B.
          */
         public Integer getThb()
         {
@@ -294,7 +391,9 @@ public class Message
         }
 
         /**
-         * @param thb The thb
+         * Set the throttle percentage for engine B.
+         *
+         * @param thb The thb (throttle percentage) for engine B.
          */
         public void setThb(Integer thb)
         {
@@ -302,6 +401,11 @@ public class Message
         }
     }
 
+    /**
+     * Head class.
+     *
+     * Contains the header for this message.
+     */
     @Generated("org.jsonschema2pojo")
     public class Head
     {
@@ -329,20 +433,21 @@ public class Message
         private Integer sta;
 
         /**
-         * No args constructor for use in serialization
+         * No args constructor for use in serialisation
          */
         public Head()
         {
         }
 
         /**
-         * @param dt
-         * @param sog
-         * @param lon
-         * @param sta
-         * @param cog
-         * @param vid
-         * @param lat
+         * @param vid Vessel identification number.
+         * @param dt Date and time.
+         * @param lat Latitude.
+         * @param lon Longitude.
+         * @param sog Speed over ground.
+         * @param cog Course over ground.
+         * @param sta Status flags. 32 bit integer where bits one to eight
+         * indicate the status of the Dyena box.
          */
         public Head(Integer vid, String dt, Float lat, Float lon, Integer sog, Float cog, Integer sta)
         {
@@ -356,7 +461,9 @@ public class Message
         }
 
         /**
-         * @return The vid
+         * Get the vessel identification number.
+         *
+         * @return The vid (vessel identification) number.
          */
         public Integer getVid()
         {
@@ -364,7 +471,9 @@ public class Message
         }
 
         /**
-         * @param vid The vid
+         * Set the vessel identification number.
+         *
+         * @param vid The vid (vessel identification) number.
          */
         public void setVid(Integer vid)
         {
@@ -372,7 +481,9 @@ public class Message
         }
 
         /**
-         * @return The dt
+         * Get the date and time of the message.
+         *
+         * @return The dt (date and time) of the message.
          */
         public String getDt()
         {
@@ -380,7 +491,9 @@ public class Message
         }
 
         /**
-         * @param dt The dt
+         * Set the date and time of the message.
+         *
+         * @param dt The dt (date and time) of the message.
          */
         public void setDt(String dt)
         {
@@ -388,7 +501,9 @@ public class Message
         }
 
         /**
-         * @return The lat
+         * Get the latitude of the vessel.
+         *
+         * @return The lat (latitude) of the vessel.
          */
         public Float getLat()
         {
@@ -396,7 +511,9 @@ public class Message
         }
 
         /**
-         * @param lat The lat
+         * Set the latitude of the vessel.
+         *
+         * @param lat The lat (latitude) of the vessel.
          */
         public void setLat(Float lat)
         {
@@ -404,7 +521,9 @@ public class Message
         }
 
         /**
-         * @return The lon
+         * Get the longitude of the vessel.
+         *
+         * @return The lon (longitude) of the vessel.
          */
         public Float getLon()
         {
@@ -412,7 +531,9 @@ public class Message
         }
 
         /**
-         * @param lon The lon
+         * Set the longitude of the vessel.
+         *
+         * @param lon The lon (longitude) of the vessel.
          */
         public void setLon(Float lon)
         {
@@ -420,7 +541,9 @@ public class Message
         }
 
         /**
-         * @return The sog
+         * Get the speed over ground of the vessel.
+         *
+         * @return The sog (speed over ground) of the vessel.
          */
         public Integer getSog()
         {
@@ -428,7 +551,9 @@ public class Message
         }
 
         /**
-         * @param sog The sog
+         * Set the speed over ground of the vessel.
+         *
+         * @param sog The sog (speed over ground) of the vessel.
          */
         public void setSog(Integer sog)
         {
@@ -436,7 +561,9 @@ public class Message
         }
 
         /**
-         * @return The cog
+         * Get the course over ground of the vessel.
+         *
+         * @return The cog (course over ground) of the vessel.
          */
         public Float getCog()
         {
@@ -444,7 +571,9 @@ public class Message
         }
 
         /**
-         * @param cog The cog
+         * Set the course over ground of the vessel.
+         *
+         * @param cog The cog (course over ground) of the vessel.
          */
         public void setCog(Float cog)
         {
@@ -452,7 +581,9 @@ public class Message
         }
 
         /**
-         * @return The sta
+         * Get the status of the system.
+         *
+         * @return The sta (status) of the system.
          */
         public Integer getSta()
         {
@@ -460,7 +591,9 @@ public class Message
         }
 
         /**
-         * @param sta The sta
+         * Set the status of the system.
+         *
+         * @param sta The sta (status) of the system.
          */
         public void setSta(Integer sta)
         {
@@ -468,6 +601,11 @@ public class Message
         }
     }
 
+    /**
+     * Intelligent fender class.
+     *
+     * Contains intelligent fender data.
+     */
     @Generated("org.jsonschema2pojo")
     public class Inf
     {
@@ -510,25 +648,27 @@ public class Message
         private Float pdz;
 
         /**
-         * No args constructor for use in serialization
+         * No args constructor for use in serialisation
          */
         public Inf()
         {
         }
 
         /**
-         * @param pcx
-         * @param pby
-         * @param pbx
-         * @param pcz
-         * @param pcy
-         * @param pax
-         * @param paz
-         * @param pay
-         * @param pdx
-         * @param pdy
-         * @param pdz
-         * @param pbz
+         * Intelligent fender individual pin constructor.
+         *
+         * @param pax Pin "A" X axis
+         * @param pay Pin "A" Y axis
+         * @param paz Pin "A" Z axis
+         * @param pbx Pin "B" X axis
+         * @param pby Pin "B" Y axis
+         * @param pbz Pin "B" Z axis
+         * @param pcx Pin "C" X axis
+         * @param pcy Pin "C" Y axis
+         * @param pcz Pin "C" Z axis
+         * @param pdx Pin "D" X axis
+         * @param pdy Pin "D" Y axis
+         * @param pdz Pin "D" Z axis
          */
         public Inf(Float pax, Float pay, Float paz, Float pbx, Float pby, Float pbz, Float pcx, Float pcy, Float pcz, Float pdx, Float pdy, Float pdz)
         {
@@ -545,7 +685,12 @@ public class Message
             this.pdy = pdy;
             this.pdz = pdz;
         }
-        
+
+        /**
+         * Intelligent fender array constructor.
+         *
+         * @param pinData Array of pin data.
+         */
         public void setAll(float[] pinData)
         {
             this.pax = pinData[0];
@@ -563,7 +708,7 @@ public class Message
         }
 
         /**
-         * @return The pax
+         * @return The pax (Pin "A" X axis)
          */
         public Float getPax()
         {
@@ -571,7 +716,7 @@ public class Message
         }
 
         /**
-         * @param pax The pax
+         * @param pax The pax (Pin "A" X axis)
          */
         public void setPax(Float pax)
         {
@@ -579,7 +724,7 @@ public class Message
         }
 
         /**
-         * @return The pay
+         * @return The pay (Pin "A" Y axis)
          */
         public Float getPay()
         {
@@ -587,7 +732,7 @@ public class Message
         }
 
         /**
-         * @param pay The pay
+         * @param pay The pay (Pin "A" Y axis)
          */
         public void setPay(Float pay)
         {
@@ -595,7 +740,7 @@ public class Message
         }
 
         /**
-         * @return The paz
+         * @return The paz (Pin "A" Z axis)
          */
         public Float getPaz()
         {
@@ -603,7 +748,7 @@ public class Message
         }
 
         /**
-         * @param paz The paz
+         * @param paz The paz (Pin "A" Z axis)
          */
         public void setPaz(Float paz)
         {
@@ -611,7 +756,7 @@ public class Message
         }
 
         /**
-         * @return The pbx
+         * @return The pbx (Pin "B" X axis)
          */
         public Float getPbx()
         {
@@ -619,7 +764,7 @@ public class Message
         }
 
         /**
-         * @param pbx The pbx
+         * @param pbx The pbx (Pin "B" X axis)
          */
         public void setPbx(Float pbx)
         {
@@ -627,7 +772,7 @@ public class Message
         }
 
         /**
-         * @return The pby
+         * @return The pby (Pin "B" Y axis)
          */
         public Float getPby()
         {
@@ -635,7 +780,7 @@ public class Message
         }
 
         /**
-         * @param pby The pby
+         * @param pby The pby (Pin "B" Y axis)
          */
         public void setPby(Float pby)
         {
@@ -643,7 +788,7 @@ public class Message
         }
 
         /**
-         * @return The pbz
+         * @return The pbz (Pin "B" Z axis)
          */
         public Float getPbz()
         {
@@ -651,7 +796,7 @@ public class Message
         }
 
         /**
-         * @param pbz The pbz
+         * @param pbz The pbz (Pin "B" Z axis)
          */
         public void setPbz(Float pbz)
         {
@@ -659,7 +804,7 @@ public class Message
         }
 
         /**
-         * @return The pcx
+         * @return The pcx (Pin "C" X axis)
          */
         public Float getPcx()
         {
@@ -667,7 +812,7 @@ public class Message
         }
 
         /**
-         * @param pcx The pcx
+         * @param pcx The pcx (Pin "C" X axis)
          */
         public void setPcx(Float pcx)
         {
@@ -675,7 +820,7 @@ public class Message
         }
 
         /**
-         * @return The pcy
+         * @return The pcy (Pin "C" Y axis)
          */
         public Float getPcy()
         {
@@ -683,7 +828,7 @@ public class Message
         }
 
         /**
-         * @param pcy The pcy
+         * @param pcy The pcy (Pin "C" Y axis)
          */
         public void setPcy(Float pcy)
         {
@@ -691,7 +836,7 @@ public class Message
         }
 
         /**
-         * @return The pcz
+         * @return The pcz (Pin "C" Z axis)
          */
         public Float getPcz()
         {
@@ -699,7 +844,7 @@ public class Message
         }
 
         /**
-         * @param pcz The pcz
+         * @param pcz The pcz (Pin "C" Z axis)
          */
         public void setPcz(Float pcz)
         {
@@ -707,7 +852,7 @@ public class Message
         }
 
         /**
-         * @return The pdx
+         * @return The pdx (Pin "D" X axis)
          */
         public Float getPdx()
         {
@@ -715,7 +860,7 @@ public class Message
         }
 
         /**
-         * @param pdx The pdx
+         * @param pdx The pdx (Pin "D" X axis)
          */
         public void setPdx(Float pdx)
         {
@@ -723,7 +868,7 @@ public class Message
         }
 
         /**
-         * @return The pdy
+         * @return The pdy (Pin "D" Y axis)
          */
         public Float getPdy()
         {
@@ -731,7 +876,7 @@ public class Message
         }
 
         /**
-         * @param pdy The pdy
+         * @param pdy The pdy (Pin "D" Y axis)
          */
         public void setPdy(Float pdy)
         {
@@ -739,7 +884,7 @@ public class Message
         }
 
         /**
-         * @return The pdz
+         * @return The pdz (Pin "D" Z axis)
          */
         public Float getPdz()
         {
@@ -747,7 +892,7 @@ public class Message
         }
 
         /**
-         * @param pdz The pdz
+         * @param pdz The pdz (Pin "D" Z axis)
          */
         public void setPdz(Float pdz)
         {
@@ -755,6 +900,11 @@ public class Message
         }
     }
 
+    /**
+     * System class.
+     *
+     * Contains voltage and temperature information.
+     */
     @Generated("org.jsonschema2pojo")
     public class Sys
     {
@@ -767,15 +917,17 @@ public class Message
         private Double temp;
 
         /**
-         * No args constructor for use in serialization
+         * No args constructor for use in serialisation
          */
         public Sys()
         {
         }
 
         /**
-         * @param volt
-         * @param temp
+         * System constructor.
+         *
+         * @param volt System voltage.
+         * @param temp System temperature.
          */
         public Sys(Double volt, Double temp)
         {
@@ -784,7 +936,9 @@ public class Message
         }
 
         /**
-         * @return The volt
+         * Get the system voltage.
+         *
+         * @return The volt (system voltage).
          */
         public Double getVolt()
         {
@@ -792,7 +946,9 @@ public class Message
         }
 
         /**
-         * @param volt The volt
+         * Set the system voltage.
+         *
+         * @param volt The volt (system voltage).
          */
         public void setVolt(Double volt)
         {
@@ -800,7 +956,9 @@ public class Message
         }
 
         /**
-         * @return The temp
+         * Get the system temperature.
+         *
+         * @return The temp (system temperature).
          */
         public Double getTemp()
         {
@@ -808,7 +966,9 @@ public class Message
         }
 
         /**
-         * @param temp The temp
+         * Set the system temperature.
+         *
+         * @param temp (system temperature).
          */
         public void setTemp(Double temp)
         {
@@ -816,6 +976,11 @@ public class Message
         }
     }
 
+    /**
+     * Vessel motion monitoring system class.
+     *
+     * Contains information about the motion of the vessel.
+     */
     @Generated("org.jsonschema2pojo")
     public class Vmms
     {
@@ -852,23 +1017,23 @@ public class Message
         private ArrayList<Double> az = new ArrayList<>();
 
         /**
-         * No args constructor for use in serialization
+         * No args constructor for use in serialisation
          */
         public Vmms()
         {
         }
 
         /**
-         * @param az
-         * @param ay
-         * @param hve
-         * @param rrms
-         * @param prms
-         * @param hrms
-         * @param hed
-         * @param rol
-         * @param pit
-         * @param ax
+         * @param hve One seconds worth of heave values (25 in total).
+         * @param pit One seconds worth of pitch values (25 in total).
+         * @param rol One seconds worth of roll values (25 in total).
+         * @param hed One seconds worth of heading values (25 in total).
+         * @param hrms Heave RMS (Root Mean Square).
+         * @param prms Pitch RMS (Root Mean Square).
+         * @param rrms Roll RMS (Root Mean Square).
+         * @param ax Vessel acceleration in the X axis.
+         * @param ay Vessel acceleration in the Y axis.
+         * @param az Vessel acceleration in the Z axis.
          */
         public Vmms(ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, Double hrms, Double prms, Double rrms, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
         {
@@ -885,7 +1050,40 @@ public class Message
         }
 
         /**
-         * @return The hve
+         * @param hve One seconds worth of heave values (25 in total).
+         * @param pit One seconds worth of pitch values (25 in total).
+         * @param rol One seconds worth of roll values (25 in total).
+         * @param hed One seconds worth of heading values (25 in total).
+         * @param ax Vessel acceleration in the X axis.
+         * @param ay Vessel acceleration in the Y axis.
+         * @param az Vessel acceleration in the Z axis.
+         */
+        public Vmms(ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
+        {
+            this.hve = hve;
+            this.pit = pit;
+            this.rol = rol;
+            this.hed = hed;
+            this.ax = ax;
+            this.ay = ay;
+            this.az = az;
+
+            double hveCount = 0, pitCount = 0, rolCount = 0;
+            for (int i = 0; i < hve.size(); i++)
+            {
+                hveCount += (hve.get(i) * hve.get(i));
+                pitCount += (pit.get(i) * pit.get(i));
+                rolCount += (rol.get(i) * rol.get(i));
+            }
+            this.hrms = hveCount / (double) hve.size();
+            this.prms = pitCount / (double) pit.size();
+            this.rrms = rolCount / (double) rol.size();
+        }
+
+        /**
+         * Set the heave array.
+         *
+         * @return The hve (heave) array.
          */
         public ArrayList<Double> getHve()
         {
@@ -893,7 +1091,9 @@ public class Message
         }
 
         /**
-         * @param hve The hve
+         * Get the heave array.
+         *
+         * @param hve The hve (heave) array.
          */
         public void setHve(ArrayList<Double> hve)
         {
@@ -901,7 +1101,9 @@ public class Message
         }
 
         /**
-         * @return The pit
+         * Get the pitch array.
+         *
+         * @return The pit (pitch) array.
          */
         public ArrayList<Double> getPit()
         {
@@ -909,7 +1111,9 @@ public class Message
         }
 
         /**
-         * @param pit The pit
+         * Set the pitch array.
+         *
+         * @param pit The pit (pitch) array.
          */
         public void setPit(ArrayList<Double> pit)
         {
@@ -917,7 +1121,9 @@ public class Message
         }
 
         /**
-         * @return The rol
+         * Get the roll array.
+         *
+         * @return The rol (roll) array.
          */
         public ArrayList<Double> getRol()
         {
@@ -925,7 +1131,9 @@ public class Message
         }
 
         /**
-         * @param rol The rol
+         * Set the roll array.
+         *
+         * @param rol The rol (roll) array.
          */
         public void setRol(ArrayList<Double> rol)
         {
@@ -933,7 +1141,9 @@ public class Message
         }
 
         /**
-         * @return The hed
+         * Get the heading array.
+         *
+         * @return The hed (heading) array.
          */
         public ArrayList<Double> getHed()
         {
@@ -941,7 +1151,9 @@ public class Message
         }
 
         /**
-         * @param hed The hed
+         * Set the heading array.
+         *
+         * @param hed The hed (heading) array.
          */
         public void setHed(ArrayList<Double> hed)
         {
@@ -949,7 +1161,9 @@ public class Message
         }
 
         /**
-         * @return The hrms
+         * Get the heading RMS.
+         *
+         * @return The hrms (heading RMS).
          */
         public Double getHrms()
         {
@@ -957,7 +1171,9 @@ public class Message
         }
 
         /**
-         * @param hrms The hrms
+         * Set the heading RMS.
+         *
+         * @param hrms The hrms (heading RMS).
          */
         public void setHrms(Double hrms)
         {
@@ -965,7 +1181,9 @@ public class Message
         }
 
         /**
-         * @return The prms
+         * Get the pitch RMS.
+         *
+         * @return The prms (pitch RMS).
          */
         public Double getPrms()
         {
@@ -973,7 +1191,9 @@ public class Message
         }
 
         /**
-         * @param prms The prms
+         * Set the pitch RMS.
+         *
+         * @param prms The prms (pitch RMS).
          */
         public void setPrms(Double prms)
         {
@@ -981,7 +1201,9 @@ public class Message
         }
 
         /**
-         * @return The rrms
+         * Get the roll RMS.
+         *
+         * @return The rrms (roll RMS).
          */
         public Double getRrms()
         {
@@ -989,7 +1211,9 @@ public class Message
         }
 
         /**
-         * @param rrms The rrms
+         * Set the roll RMS.
+         *
+         * @param rrms The rrms (roll RMS).
          */
         public void setRrms(Double rrms)
         {
@@ -997,6 +1221,8 @@ public class Message
         }
 
         /**
+         * Get the X acceleration.
+         *
          * @return The ax
          */
         public ArrayList<Double> getAx()
@@ -1005,6 +1231,8 @@ public class Message
         }
 
         /**
+         * Set the X acceleration.
+         *
          * @param ax The ax
          */
         public void setAx(ArrayList<Double> ax)
@@ -1013,6 +1241,8 @@ public class Message
         }
 
         /**
+         * Get the Y acceleration.
+         *
          * @return The ay
          */
         public ArrayList<Double> getAy()
@@ -1021,6 +1251,8 @@ public class Message
         }
 
         /**
+         * Set the Y acceleration.
+         *
          * @param ay The ay
          */
         public void setAy(ArrayList<Double> ay)
@@ -1029,6 +1261,8 @@ public class Message
         }
 
         /**
+         * Get the Z acceleration.
+         *
          * @return The az
          */
         public ArrayList<Double> getAz()
@@ -1037,24 +1271,37 @@ public class Message
         }
 
         /**
+         * Set the Z acceleration.
+         *
          * @param az The az
          */
         public void setAz(ArrayList<Double> az)
         {
             this.az = az;
         }
+
+        @Override
+        public String toString()
+        {
+            StringBuilder result = new StringBuilder();
+            hve.stream().forEach((d) ->
+            {
+                result.append("\nMessage " + d);
+            });
+            return result.toString();
+        }
     }
 
     @Override
     public String toString()
     {
-        return "Message{" +
-                "bt=" + bt +
-                ", head=" + head +
-                ", vmms=" + vmms +
-                ", inf=" + inf +
-                ", eng=" + eng +
-                ", sys=" + sys +
-                '}';
+        return "Message{"
+                + "bt=" + bt
+                + ", head=" + head
+                + ", vmms=" + vmms
+                + ", inf=" + inf
+                + ", eng=" + eng
+                + ", sys=" + sys
+                + '}';
     }
 }

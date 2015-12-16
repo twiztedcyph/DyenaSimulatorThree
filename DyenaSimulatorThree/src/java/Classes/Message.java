@@ -11,9 +11,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
 
 @Generated("org.jsonschema2pojo")
@@ -64,7 +62,7 @@ public class Message
         this.sys = sys;
     }
 
-    public Message(Line line, int vid, ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
+    public Message(Line line, int vid, double[] hve, double[] pit, double[] rol, double[] hed, double[] ax, double[] ay, double[] az)
     {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.sss");
 	Date date = new Date();
@@ -73,16 +71,16 @@ public class Message
         this.bt = 257;
         this.head = new Head(vid, dateFormat.format(date), line.getLatitude(), line.getLongitude(), 0, 0.0f, 257);
         /*
-         ArrayList<Double> hve,
-         ArrayList<Double> pit,
-         ArrayList<Double> rol,
-         ArrayList<Double> hed,
+         double[] hve,
+         double[] pit,
+         double[] rol,
+         double[] hed,
          Double hrms,
          Double prms,
          Double rrms,
-         ArrayList<Double> ax,
-         ArrayList<Double> ay,
-         ArrayList<Double> az
+         double[] ax,
+         double[] ay,
+         double[] az
          */
         //Need to get the arrays set up....
         this.vmms = new Vmms(hve, pit, rol, hed, ax, ay, az);
@@ -987,16 +985,16 @@ public class Message
 
         @SerializedName("hve")
         @Expose
-        private ArrayList<Double> hve = new ArrayList<>();
+        private double[] hve = new double[25];
         @SerializedName("pit")
         @Expose
-        private ArrayList<Double> pit = new ArrayList<>();
+        private double[] pit = new double[25];
         @SerializedName("rol")
         @Expose
-        private ArrayList<Double> rol = new ArrayList<>();
+        private double[] rol = new double[25];
         @SerializedName("hed")
         @Expose
-        private ArrayList<Double> hed = new ArrayList<>();
+        private double[] hed = new double[25];
         @SerializedName("hrms")
         @Expose
         private Double hrms;
@@ -1008,13 +1006,13 @@ public class Message
         private Double rrms;
         @SerializedName("ax")
         @Expose
-        private ArrayList<Double> ax = new ArrayList<>();
+        private double[] ax = new double[25];
         @SerializedName("ay")
         @Expose
-        private ArrayList<Double> ay = new ArrayList<>();
+        private double[] ay = new double[25];
         @SerializedName("az")
         @Expose
-        private ArrayList<Double> az = new ArrayList<>();
+        private double[] az = new double[25];
 
         /**
          * No args constructor for use in serialisation
@@ -1035,7 +1033,7 @@ public class Message
          * @param ay Vessel acceleration in the Y axis.
          * @param az Vessel acceleration in the Z axis.
          */
-        public Vmms(ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, Double hrms, Double prms, Double rrms, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
+        public Vmms(double[] hve, double[] pit, double[] rol, double[] hed, Double hrms, Double prms, Double rrms, double[] ax, double[] ay, double[] az)
         {
             this.hve = hve;
             this.pit = pit;
@@ -1058,7 +1056,7 @@ public class Message
          * @param ay Vessel acceleration in the Y axis.
          * @param az Vessel acceleration in the Z axis.
          */
-        public Vmms(ArrayList<Double> hve, ArrayList<Double> pit, ArrayList<Double> rol, ArrayList<Double> hed, ArrayList<Double> ax, ArrayList<Double> ay, ArrayList<Double> az)
+        public Vmms(double[] hve, double[] pit, double[] rol, double[] hed, double[] ax, double[] ay, double[] az)
         {
             this.hve = hve;
             this.pit = pit;
@@ -1069,15 +1067,15 @@ public class Message
             this.az = az;
 
             double hveCount = 0, pitCount = 0, rolCount = 0;
-            for (int i = 0; i < hve.size(); i++)
+            for (int i = 0; i < hve.length; i++)
             {
-                hveCount += (hve.get(i) * hve.get(i));
-                pitCount += (pit.get(i) * pit.get(i));
-                rolCount += (rol.get(i) * rol.get(i));
+                hveCount += (hve[i] * hve[i]);
+                pitCount += (pit[i] * pit[i]);
+                rolCount += (rol[i] * rol[i]);
             }
-            this.hrms = hveCount / (double) hve.size();
-            this.prms = pitCount / (double) pit.size();
-            this.rrms = rolCount / (double) rol.size();
+            this.hrms = hveCount / (double) hve.length;
+            this.prms = pitCount / (double) pit.length;
+            this.rrms = rolCount / (double) rol.length;
         }
 
         /**
@@ -1085,7 +1083,7 @@ public class Message
          *
          * @return The hve (heave) array.
          */
-        public ArrayList<Double> getHve()
+        public double[] getHve()
         {
             return hve;
         }
@@ -1095,7 +1093,7 @@ public class Message
          *
          * @param hve The hve (heave) array.
          */
-        public void setHve(ArrayList<Double> hve)
+        public void setHve(double[] hve)
         {
             this.hve = hve;
         }
@@ -1105,7 +1103,7 @@ public class Message
          *
          * @return The pit (pitch) array.
          */
-        public ArrayList<Double> getPit()
+        public double[] getPit()
         {
             return pit;
         }
@@ -1115,7 +1113,7 @@ public class Message
          *
          * @param pit The pit (pitch) array.
          */
-        public void setPit(ArrayList<Double> pit)
+        public void setPit(double[] pit)
         {
             this.pit = pit;
         }
@@ -1125,7 +1123,7 @@ public class Message
          *
          * @return The rol (roll) array.
          */
-        public ArrayList<Double> getRol()
+        public double[] getRol()
         {
             return rol;
         }
@@ -1135,7 +1133,7 @@ public class Message
          *
          * @param rol The rol (roll) array.
          */
-        public void setRol(ArrayList<Double> rol)
+        public void setRol(double[] rol)
         {
             this.rol = rol;
         }
@@ -1145,7 +1143,7 @@ public class Message
          *
          * @return The hed (heading) array.
          */
-        public ArrayList<Double> getHed()
+        public double[] getHed()
         {
             return hed;
         }
@@ -1155,7 +1153,7 @@ public class Message
          *
          * @param hed The hed (heading) array.
          */
-        public void setHed(ArrayList<Double> hed)
+        public void setHed(double[] hed)
         {
             this.hed = hed;
         }
@@ -1225,7 +1223,7 @@ public class Message
          *
          * @return The ax
          */
-        public ArrayList<Double> getAx()
+        public double[] getAx()
         {
             return ax;
         }
@@ -1235,7 +1233,7 @@ public class Message
          *
          * @param ax The ax
          */
-        public void setAx(ArrayList<Double> ax)
+        public void setAx(double[] ax)
         {
             this.ax = ax;
         }
@@ -1245,7 +1243,7 @@ public class Message
          *
          * @return The ay
          */
-        public ArrayList<Double> getAy()
+        public double[] getAy()
         {
             return ay;
         }
@@ -1255,7 +1253,7 @@ public class Message
          *
          * @param ay The ay
          */
-        public void setAy(ArrayList<Double> ay)
+        public void setAy(double[] ay)
         {
             this.ay = ay;
         }
@@ -1265,7 +1263,7 @@ public class Message
          *
          * @return The az
          */
-        public ArrayList<Double> getAz()
+        public double[] getAz()
         {
             return az;
         }
@@ -1275,7 +1273,7 @@ public class Message
          *
          * @param az The az
          */
-        public void setAz(ArrayList<Double> az)
+        public void setAz(double[] az)
         {
             this.az = az;
         }
@@ -1284,10 +1282,7 @@ public class Message
         public String toString()
         {
             StringBuilder result = new StringBuilder();
-            hve.stream().forEach((d) ->
-            {
-                result.append("\nMessage " + d);
-            });
+            result.append(Arrays.toString(hve));
             return result.toString();
         }
     }

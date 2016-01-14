@@ -7,7 +7,6 @@ package Classes;
 
 import Classes.Parser.Line;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,10 +18,12 @@ public class Updater implements Runnable
 
     private Parser parser;
     private Message localMessage = new Message();
+    private boolean doneLoading = false;
 
     public Updater() throws IOException
     {
         parser = new Parser();
+        doneLoading = true;
     }
 
     @Override
@@ -30,46 +31,36 @@ public class Updater implements Runnable
     {
         int counter = 0;
 
-        ArrayList<Double> heave, pitch, roll, heading, ax, ay, az;
+        double[] heave, pitch, roll, heading, ax, ay, az;
 
-        heave = new ArrayList<>();
-        pitch = new ArrayList<>();
-        roll = new ArrayList<>();
-        heading = new ArrayList<>();
-        ax = new ArrayList<>();
-        ay = new ArrayList<>();
-        az = new ArrayList<>();
+        heave = new double[25];
+        pitch = new double[25];
+        roll = new double[25];
+        heading = new double[25];
+        ax = new double[25];
+        ay = new double[25];
+        az = new double[25];
 
         while (true)
         {
             Line line = parser.getLine();
 
-            heave.add(new Double(line.getHeave()));
-            pitch.add(new Double(line.getPitch()));
-            roll.add(new Double(line.getRoll()));
-            heading.add(new Double(line.getRoll()));
-            ax.add(new Double(line.getAccelerationX()));
-            ay.add(new Double(line.getAccelerationY()));
-            az.add(new Double(line.getAccelerationZ()));
+            heave[counter] = line.getHeave();
+            pitch[counter] = line.getPitch();
+            roll[counter] = line.getRoll();
+            heading[counter] = line.getHeading();
+            ax[counter] = line.getAccelerationX();
+            ay[counter] = line.getAccelerationY();
+            az[counter] = line.getAccelerationZ();
 
             if (counter++ == 24)
             {
-                localMessage = new Message(line, 9999999, heave, pitch, roll, heading, ax, ay, az);
-//                heave.stream().forEach((d) ->
-//                {
-//                    System.out.print("Updater "+ d + " ");
-//                });
-//                System.out.println("");
-                //System.out.println("Sizes Before: " + heave.size());
-                heave.clear();
-                pitch.clear();
-                roll.clear();
-                heading.clear();
-                ax.clear();
-                ay.clear();
-                az.clear();
-                //System.out.println("Sizes After: " + heave.size());
+                synchronized(localMessage)
+                {
+                    localMessage = new Message(line, 9999999, heave, pitch, roll, heading, ax, ay, az);
+                }
                 counter = 0;
+                System.gc();
             }
             try
             {
@@ -81,9 +72,8 @@ public class Updater implements Runnable
         }
     }
     
-    public Message getMessage()
+    public synchronized Message getMessage()
     {
-        //System.out.println(localMessage);
         return localMessage;
     }
 
@@ -94,6 +84,6 @@ public class Updater implements Runnable
     
     public boolean doneLoading()
     {
-        return parser.isDoneLoading();
+        return doneLoading;
     }
 }
